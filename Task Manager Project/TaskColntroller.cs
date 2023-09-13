@@ -20,6 +20,10 @@ namespace Task_Manager_Project
             task.status = Task.TaskStatus.InProgress;
             tasks.Add(task);
         }
+        public List<Task> GetTasks()
+        {
+            return tasks.ToList();
+        }
 
 
 

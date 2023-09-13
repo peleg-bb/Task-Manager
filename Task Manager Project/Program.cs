@@ -54,7 +54,13 @@ namespace Task_Manager_Project
 
             Route.Add("/tasks", (request, response, props) =>
             {
-                response.AsText("Hello World");
+                List<Task> tasks = taskColntroller.GetTasks();
+                response.StatusCode = 200;
+                response.Headers.Add("Content-Type", "application/json");
+
+                // Serialize and send the task list as JSON
+                string tasksJson = JsonConvert.SerializeObject(tasks);
+                response.OutputStream.Write(Encoding.UTF8.GetBytes(tasksJson), 0, tasksJson.Length);
             });
             // add a post method which receives a task
             HttpServer.ListenAsync(1337, CancellationToken.None, Route.OnHttpRequestAsync).Wait();
