@@ -69,7 +69,7 @@ namespace Task_Manager_Project
                             var requestBody = reader.ReadToEnd();
 
                             // Parse the JSON data into a Task object
-                            var taskID = JsonConvert.DeserializeObject<int>(requestBody);
+                            var taskID = JsonConvert.DeserializeObject<string>(requestBody);
 
                             if (taskColntroller.CompleteTask(taskID))
                             {

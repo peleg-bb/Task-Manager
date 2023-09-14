@@ -1,72 +1,77 @@
-
+/**
+ * Fetches the task list from the server.
+ */
 export function fetchTaskListFromServer() {
-    // Define the URL of your C# backend endpoint for retrieving the task list
     const url = 'http://localhost:1337/api/tasks';
 
-    // Send a GET request to the server
-    fetch(url, {mode: 'no-cors'})
+    fetch(url, { mode: 'no-cors' })
         .then(response => response.json())
         .then(data => {
-            // Handle the response from the server (e.g., display the task list)
             console.log('Task list retrieved:', data);
-            // You can update your UI with the retrieved task list
         })
         .catch(error => {
-            // Handle errors (e.g., network error, invalid response)
-            console.error('Error retrieving task list:', error);
+            // console.error('Error retrieving task list:', error);
         });
 }
-export function addTaskToServer(title, description) {
-    // Create a task object with title and description
-    const task = { title, description };
 
-    // Define the URL of your C# backend endpoint for adding tasks
+/**
+ * Adds a new task to the server.
+ * @param {string} title - The title of the task.
+ * @param {string} description - The description of the task.
+ */
+export function addTaskToServer(title, description) {
+    const task = { title, description };
     const url = 'http://localhost:1337/api/tasks/add';
-    const requestBody = JSON.stringify(task)
-    // Send a POST request to the server
-    fetch(url, {mode: 'no-cors',
+    const requestBody = JSON.stringify(task);
+
+    fetch(url, {
+        mode: 'no-cors',
         method: 'POST',
         body: requestBody,
         headers: {
             'Content-Type': 'application/json',
-        }// Convert the task object to JSON
-    }).then(response => {
-        if (!response.ok) {
-            console.log(response);
-        }
-        // Parse the response JSON to get the task ID
-        return response.json();
+        },
     })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response);
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Task added:', data);
         })
         .catch(error => {
-            // Handle errors (e.g., network error, invalid response)
-            console.error('Error adding task:', error);
+            // console.error('Error adding task:', error);
         });
 }
 
-export function completeTaskOnServer(taskTitle){
+/**
+ * Marks a task as completed on the server.
+ * @param {string} taskTitle - The title of the task to mark as completed.
+ */
+export function completeTaskOnServer(taskTitle) {
     const url = 'http://localhost:1337/api/tasks/complete';
-    const requestBody = JSON.stringify(taskTitle)
-    fetch(url, {mode: 'no-cors',
+    const requestBody = JSON.stringify(taskTitle);
+
+    fetch(url, {
+        mode: 'no-cors',
         method: 'POST',
         body: requestBody,
         headers: {
             'Content-Type': 'application/json',
-        }
-    }).then(response => {
-        if (!response.ok) {
-            console.log(response);
-        }
-        // Parse the response JSON to get the task ID
-        return response.json();
+        },
     })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response);
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Task completed:', data);
         })
         .catch(error => {
-            // Handle errors (e.g., network error, invalid response)
-            console.error('Error completing task:', error);
+            // console.error('Error completing task:', error);
         });
 }

@@ -26,11 +26,11 @@ namespace Task_Manager_Project
             return tasks.ToList();
         }
 
-        public bool CompleteTask(int taskID)
+        public bool CompleteTask(string taskTitle)
         {
             foreach (Task task in tasks)
             {
-                if (taskID == task.id)
+                if (taskTitle == task.title)
                 {
                     task.status = Task.TaskStatus.Done;
                     return true;
