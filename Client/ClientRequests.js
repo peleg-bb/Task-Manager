@@ -45,3 +45,28 @@ export function addTaskToServer(title, description) {
             console.error('Error adding task:', error);
         });
 }
+
+export function completeTaskOnServer(taskTitle){
+    const url = 'http://localhost:1337/api/tasks/complete';
+    const requestBody = JSON.stringify(taskTitle)
+    fetch(url, {mode: 'no-cors',
+        method: 'POST',
+        body: requestBody,
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => {
+        if (!response.ok) {
+            console.log(response);
+        }
+        // Parse the response JSON to get the task ID
+        return response.json();
+    })
+        .then(data => {
+            console.log('Task completed:', data);
+        })
+        .catch(error => {
+            // Handle errors (e.g., network error, invalid response)
+            console.error('Error completing task:', error);
+        });
+}
