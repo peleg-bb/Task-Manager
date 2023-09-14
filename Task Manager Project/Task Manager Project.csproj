@@ -90,7 +90,7 @@
     <Compile Include="Task.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskColntroller.cs" />
+    <Compile Include="TaskController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

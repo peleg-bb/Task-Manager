@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Task_Manager_Project
 {
+    /// <summary>
+    /// This class represents a task.
+    /// A task is identified by an id, has a title, a description and a status: {InProgress, Done}
+    /// </summary>
     internal class Task
     {
         [JsonProperty("id")]
@@ -19,6 +18,9 @@ namespace Task_Manager_Project
         internal TaskStatus status { get; set; }
 
         internal enum TaskStatus { InProgress, Done };
+        /// <summary>
+        /// Constructor to be called the TaskController
+        /// </summary>
         public Task(int id, string title, string description)
         {
             this.id = id;

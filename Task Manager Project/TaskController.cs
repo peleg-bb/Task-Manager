@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task_Manager_Project
 {
-    
-    internal class TaskColntroller
+    /// <summary>
+    /// This class is responsible for managing the tasks.
+    /// It has a list of tasks and methods to add and complete tasks.
+    /// </summary>
+    internal class TaskController
     {
         private HashSet<Task> tasks;
-        public TaskColntroller()
+        public TaskController()
         {
             tasks = new HashSet<Task>();
         }
@@ -21,11 +21,16 @@ namespace Task_Manager_Project
             tasks.Add(task);
             return task;
         }
+        
         public List<Task> GetTasks()
         {
             return tasks.ToList();
         }
 
+        /// <summary>
+        /// This method completes a task by changing its status to Done
+        /// Returns true if the task was found and completed, false otherwise
+        /// </summary>
         public bool CompleteTask(string taskTitle)
         {
             foreach (Task task in tasks)

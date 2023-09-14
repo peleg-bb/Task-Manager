@@ -15,7 +15,7 @@ namespace Task_Manager_Project
 
         static void Main(string[] args)
         {
-            TaskColntroller taskColntroller = new TaskColntroller();
+            TaskController taskController = new TaskController();
             Route.Add("/api/tasks/add", (request, response, props) =>
             {
                 if (request.HttpMethod == "POST")
@@ -27,13 +27,10 @@ namespace Task_Manager_Project
                         {
                             var requestBody = reader.ReadToEnd();
                             response.Headers.Add("Content-Type", "application/json");
-                            // Parse the JSON data into a Task object
                             var taskToAdd = JsonConvert.DeserializeObject<Task>(requestBody);
-                            Task taskAdded = taskColntroller.AddTask(taskToAdd);
+                            Task taskAdded = taskController.AddTask(taskToAdd);
 
-                            // Respond with a success status code and the added task
                             response.StatusCode = 200; // OK
-                            // return a json with task Id 
                             string responseJson = JsonConvert.SerializeObject(taskAdded);
                             response.OutputStream.Write(Encoding.UTF8.GetBytes(responseJson), 0, responseJson.Length);
                             response.OutputStream.Close();
@@ -63,7 +60,6 @@ namespace Task_Manager_Project
                 {
                     try
                     {
-                        // Read the request body data
                         using (var reader = new StreamReader(request.InputStream))
                         {
                             var requestBody = reader.ReadToEnd();
@@ -71,11 +67,9 @@ namespace Task_Manager_Project
                             // Parse the JSON data into a Task object
                             var taskID = JsonConvert.DeserializeObject<string>(requestBody);
 
-                            if (taskColntroller.CompleteTask(taskID))
+                            if (taskController.CompleteTask(taskID))
                             {
-                                // Respond with a success status code and the added task
                                 response.StatusCode = 200; // OK
-                                // return a json with task Id 
                                 response.AsText("Task successfully marked as complete!");
                             }
                             else
@@ -83,8 +77,6 @@ namespace Task_Manager_Project
                                 response.StatusCode = 400;
                                 response.AsText("Task ID not found");
                             }
-
-
                         }
                     }
                     catch (Exception ex)
@@ -105,16 +97,14 @@ namespace Task_Manager_Project
 
             Route.Add("/api/tasks", (request, response, props) =>
             {
-                List<Task> tasks = taskColntroller.GetTasks();
+                List<Task> tasks = taskController.GetTasks();
                 response.StatusCode = 200;
                 response.Headers.Add("Content-Type", "application/json");
 
-                // Serialize and send the task list as JSON
                 string tasksJson = JsonConvert.SerializeObject(tasks);
-                // response.OutputStream.Write(Encoding.UTF8.GetBytes(tasksJson), 0, tasksJson.Length);
                 response.AsText(tasksJson);
             });
-            // add a post method which receives a task
+            
             HttpServer.ListenAsync(1337, CancellationToken.None, Route.OnHttpRequestAsync).Wait();
         }
     }
