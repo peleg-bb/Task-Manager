@@ -26,14 +26,19 @@ namespace Task_Manager_Project
                         using (var reader = new StreamReader(request.InputStream))
                         {
                             var requestBody = reader.ReadToEnd();
-
+                            response.Headers.Add("Content-Type", "application/json");
                             // Parse the JSON data into a Task object
-                            var task = JsonConvert.DeserializeObject<Task>(requestBody);
-                            taskColntroller.AddTask(task);
+                            var taskToAdd = JsonConvert.DeserializeObject<Task>(requestBody);
+                            Task taskAdded = taskColntroller.AddTask(taskToAdd);
 
                             // Respond with a success status code and the added task
                             response.StatusCode = 200; // OK
-                            response.AsText("Task added successfully!");
+                            // return a json with task Id 
+                            string responseJson = JsonConvert.SerializeObject(taskAdded);
+                            response.OutputStream.Write(Encoding.UTF8.GetBytes(responseJson), 0, responseJson.Length);
+                            response.OutputStream.Close();
+
+
                         }
                     }
                     catch (Exception ex)
@@ -52,7 +57,53 @@ namespace Task_Manager_Project
                 }
             }, method:"POST");
 
-            Route.Add("/tasks", (request, response, props) =>
+            Route.Add("/api/tasks/complete", (request, response, props) =>
+            {
+                if (request.HttpMethod == "POST")
+                {
+                    try
+                    {
+                        // Read the request body data
+                        using (var reader = new StreamReader(request.InputStream))
+                        {
+                            var requestBody = reader.ReadToEnd();
+
+                            // Parse the JSON data into a Task object
+                            var taskID = JsonConvert.DeserializeObject<int>(requestBody);
+
+                            if (taskColntroller.CompleteTask(taskID))
+                            {
+                                // Respond with a success status code and the added task
+                                response.StatusCode = 200; // OK
+                                // return a json with task Id 
+                                response.AsText("Task successfully marked as complete!");
+                            }
+                            else
+                            {
+                                response.StatusCode = 400;
+                                response.AsText("Task ID not found");
+                            }
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle errors (e.g., invalid JSON)
+                        response.StatusCode = 400; // Bad Request
+                        response.AsText($"Error: {ex.Message}");
+                    }
+                }
+
+                else
+                {
+                    // Handle other HTTP methods for this route
+                    response.StatusCode = 405; // Method Not Allowed
+                    response.AsText("Method not allowed for this route.");
+                }
+            }, method: "POST");
+
+            Route.Add("/api/tasks", (request, response, props) =>
             {
                 List<Task> tasks = taskColntroller.GetTasks();
                 response.StatusCode = 200;
@@ -60,7 +111,8 @@ namespace Task_Manager_Project
 
                 // Serialize and send the task list as JSON
                 string tasksJson = JsonConvert.SerializeObject(tasks);
-                response.OutputStream.Write(Encoding.UTF8.GetBytes(tasksJson), 0, tasksJson.Length);
+                // response.OutputStream.Write(Encoding.UTF8.GetBytes(tasksJson), 0, tasksJson.Length);
+                response.AsText(tasksJson);
             });
             // add a post method which receives a task
             HttpServer.ListenAsync(1337, CancellationToken.None, Route.OnHttpRequestAsync).Wait();

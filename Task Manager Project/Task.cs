@@ -9,11 +9,13 @@ namespace Task_Manager_Project
 {
     internal class Task
     {
+        [JsonProperty("id")]
         internal int id { get; set; }
         [JsonProperty("title")]
         internal string title { get; set; }
         [JsonProperty("description")]
         internal string description { get; set; }
+        [JsonProperty("status")]
         internal TaskStatus status { get; set; }
 
         internal enum TaskStatus { InProgress, Done };
